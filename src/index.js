@@ -181,7 +181,8 @@ function HighlightedSquare(props) {
             status = 'Выиграл ' + winner.win;
         } else {
             status = 'Следующий ход: ' + (this.state.xIsNext ? 'X' : 'O');
-        } 
+        }
+        if (history.length > 9) status = 'ничья' 
         
         if (this.state.isReverse) moves.reverse();
     
