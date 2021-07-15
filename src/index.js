@@ -28,7 +28,7 @@ function HighlightedSquare(props) {
     
     renderSquare(i) {
       let square;
-      if (this.props.highligted === i) {
+      if (this.props.highlighted && this.props.highlighted.includes(i)) {
        
         square = <HighlightedSquare
         key={i} 
@@ -94,7 +94,7 @@ function HighlightedSquare(props) {
               }],
               stepNumber: 0,
               xIsNext: true,
-              highligted: null,
+              highlighted: null,
               isReverse: false,
           };
       }
@@ -118,6 +118,9 @@ function HighlightedSquare(props) {
             stepNumber: history.length,
             xIsNext: !this.state.xIsNext,
             });
+            
+            if (calculateWinner(squares))
+            this.highlightSquare(calculateWinner(squares).winningCombination);
       }
 
       jumpTo(step) {
@@ -129,13 +132,19 @@ function HighlightedSquare(props) {
       
       handleMouseOver({row, col}) {
           this.setState({
-            highligted: row*3+col,
+            highlighted: [row*3+col],
           })
       }
 
       handleMouseOut() {
         this.setState({
-          highligted: null,
+          highlighted: null,
+        })
+      }
+
+      highlightSquare(arr) {
+        this.setState({
+          highlighted: arr,
         })
       }
 
@@ -169,7 +178,7 @@ function HighlightedSquare(props) {
 
         let status;
         if (winner) {
-            status = 'Выиграл ' + winner;
+            status = 'Выиграл ' + winner.win;
         } else {
             status = 'Следующий ход: ' + (this.state.xIsNext ? 'X' : 'O');
         } 
@@ -182,7 +191,7 @@ function HighlightedSquare(props) {
             <Board 
               squares={current.squares}
               onClick={(i) => this.handleClick(i)}
-              highligted={this.state.highligted}        
+              highlighted={this.state.highlighted}        
             />
           </div>
           <div className="game-info">
@@ -215,7 +224,10 @@ function HighlightedSquare(props) {
     for (let i = 0; i < lines.length; i++) {
       const [a, b, c] = lines[i];
       if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-        return squares[a];
+        return {
+          win: squares[a],
+          winningCombination: lines[i],
+        }
       }
     }
     return null;
@@ -226,5 +238,4 @@ function HighlightedSquare(props) {
   ReactDOM.render(
     <Game />,
     document.getElementById('root')
-  );
-  
+  );  
