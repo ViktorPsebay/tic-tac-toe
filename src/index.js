@@ -29,12 +29,15 @@ function HighlightedSquare(props) {
     renderSquare(i) {
       let square;
       if (this.props.highligted === i) {
-        square = <HighlightedSquare 
+       
+        square = <HighlightedSquare
+        key={i} 
         value={this.props.squares[i]}
         onClick={() => this.props.onClick(i)}
       />
       } else {
         square = <Square 
+        key={i} 
         value={this.props.squares[i]}
         onClick={() => this.props.onClick(i)}
       />
@@ -43,9 +46,25 @@ function HighlightedSquare(props) {
     }
   
     render() {
+      const squares = [];
+      for (let i = 0; i < 9; ++i) {
+        squares.push(this.renderSquare(i));
+      }
       return (
         <div>
-          <div className="board-row">
+              {squares.map((item, index, arr) => {
+              if (index%3 === 0) {
+                return (
+                  <div className="board-row" key={index}>
+                    {arr[index]}
+                    {arr[index+1]}
+                    {arr[index+2]}
+                  </div>
+                )
+              }
+              return null; 
+            })}
+          {/* <div className="board-row">
             {this.renderSquare(0)}
             {this.renderSquare(1)}
             {this.renderSquare(2)}
@@ -59,7 +78,7 @@ function HighlightedSquare(props) {
             {this.renderSquare(6)}
             {this.renderSquare(7)}
             {this.renderSquare(8)}
-          </div>
+          </div> */}
         </div>
       );
     }
@@ -76,6 +95,7 @@ function HighlightedSquare(props) {
               stepNumber: 0,
               xIsNext: true,
               highligted: null,
+              isReverse: false,
           };
       }
 
@@ -154,6 +174,7 @@ function HighlightedSquare(props) {
             status = 'Следующий ход: ' + (this.state.xIsNext ? 'X' : 'O');
         } 
         
+        if (this.state.isReverse) moves.reverse();
     
       return (
         <div className="game">
@@ -167,6 +188,13 @@ function HighlightedSquare(props) {
           <div className="game-info">
             <div>{status}</div>
             <ol>{moves}</ol>
+          </div>
+          <div >
+            <button onClick={() => {
+              this.setState({
+                isReverse: !this.state.isReverse,
+              })
+            }}>reverse</button>
           </div>
         </div>
       );
