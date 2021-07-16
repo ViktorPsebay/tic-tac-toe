@@ -217,13 +217,13 @@ ReactDOM.render(
 ); 
 
 Square.propTypes = {
-  highlighted: PropTypes.boolean,
+  highlighted: PropTypes.bool,
   onClick: PropTypes.func,
   value: PropTypes.string,
 };
 
 Board.propTypes = {
-  highlighted: PropTypes.boolean,
+  highlighted: PropTypes.array,
   onClick: PropTypes.func,
-  squares: PropTypes.Array,
+  squares: PropTypes.array,
 };
